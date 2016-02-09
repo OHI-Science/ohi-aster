@@ -1,0 +1,40 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: auto;
+  margin-top: 2%;
+  position: relative;
+  width: 960px;
+}
+
+text {
+  font: 10px sans-serif;
+}
+
+form {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+input {
+  margin: 0 7px;
+}
+
+.canvas{
+  background-color: rgba(128, 128, 128, 0.14);
+}
+
+.path{
+  cursor: pointer;
+  stroke:black;
+  stroke-width: 1;
+}
+
+.outlineArc{
+  stroke-dasharray: 5 5;
+}
+
+
+.aster-score:hover{
+  cursor: pointer;
+}
