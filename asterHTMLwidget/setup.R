@@ -8,6 +8,7 @@ library(devtools)
 
 # set working directory
 path <- "C:/Users/hsontrop/Desktop/"
+path <- '~/github/ohi-aster/asterHTMLwidget'
 setwd(path)
 
 # create package called aster using devtools

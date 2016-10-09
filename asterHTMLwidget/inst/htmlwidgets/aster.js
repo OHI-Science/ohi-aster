@@ -27,6 +27,7 @@ HTMLWidgets.widget({
 
       // main data
       var data   = x.data;
+      var score  = x.score;
 
       // for margin convention and meaning see: https://bl.ocks.org/mbostock/3019563
       var margin = {top: x.margin_top, right: x.margin_right, bottom: x.margin_bottom, left: x.margin_left};
@@ -103,15 +104,6 @@ HTMLWidgets.widget({
         .attr("stroke", x.stroke) // change the stroke based on htmlwidget options
         .attr("class", "outlineArc")
         .attr("d", outlineArc);
-
-      // calculate the weighted mean score
-      var score =
-      data.reduce(function(a, b) {
-        return a + (b.score * b.weight);
-        }, 0) /
-      data.reduce(function(a, b) {
-      return a + b.weight;
-      }, 0);
 
       // center text
       svg.append("svg:text")

@@ -24,7 +24,7 @@ aster <- function(data = data.frame(id     = c("FIS","MAR","AO","NP","CS"),
                                     weight = c(0.5,0.5,1,1,1),
                                     color  = c("#9E0041","#C32F4B","#E1514B","#F47245","#FB9F59"),
                                     label  = c("Fisheries","Mariculture","Artisanal Fishing Opportunities","Natural Products","Carbon Storage")),
-
+                  score = 55,
                   width = NULL, height = NULL, background_color = "transparent", text_offset = 1, font_color = "black",
                   tooltipStyle = 'qtip-dark qtip-shadow qtip-tipsy',
                   inner = 0.3, stroke = "grey", hover_color = "blue", font_size = "12px", font_size_center = "50px",
@@ -32,7 +32,8 @@ aster <- function(data = data.frame(id     = c("FIS","MAR","AO","NP","CS"),
 
   # forward options using x
   x = list(
-    data             = toJSON(data),
+    data             = jsonlite::toJSON(data),
+    score            = score,
     inner            = inner,
     stroke           = stroke,
     hover_color      = hover_color,

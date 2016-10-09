@@ -5,9 +5,10 @@ library(aster)
 
 # set wd
 setwd("C:/Users/hsontrop/Desktop/aster/")
+setwd("~/github/ohi-aster")
 
 # data
-data <- read.csv("aster_data.csv")
+data <- read.csv("data/aster_data.csv")
 
 # toy app
 runApp(list(
