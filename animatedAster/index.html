@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<h1>d3.js aster chart widget prototype 2</h1>
+<form></form>
+<script src = "js/jquery-2.2.0.min.js"></script>
+<script src = "js/jquery.qtip.min.js"></script>
+<script src = "js/d3.v3.min.js"></script>
+<script src = "js/helpers.js"></script>
+<link rel = "stylesheet" type="text/css" href = "css/jquery.qtip.min.css">
+<link rel = "stylesheet" type="text/css" href = "css/style.css">
+<script>
+  // initial data (used during construction)
+  var data_1 = [
+  	{region: "region 1"  , dataSet: "data1", count: 200, height: 100, fill: "blue"},
+  	{region: "region 2"  , dataSet: "data1", count: 200, height: 120, fill: "lightblue"},
+	{region: "region 4"  , dataSet: "data1", count: 200, height: 150, fill: "green"},
+  ];
+  
+  // data update
+  var data_2 = [
+  	{region: "region 1"  , dataSet: "data2" , count: 53245, height: 100, fill: "blue"},	
+  	{region: "region 2"  , dataSet: "data2" , count: 19697, height: 150 , fill: "blue"},
+	{region: "region 3"  , dataSet: "data2" , count: 40245, height: 140, fill: "blue"},
+	{region: "region 4"  , dataSet: "data2" , count: 28479, height: 150, fill: "green"},
+  	{region: "region 5"  , dataSet: "data2" , count: 24037, height: 120, fill: "red"}
+  ];
+  
+  // input data visualization
+  var regionsByFruit = [ 
+     {key: "data1", values: data_1}, 
+     {key: "data2" , values: data_2}
+  ];
+
+  // chart drawing area, see margin convention http://bl.ocks.org/mbostock/3019563  
+  var margin = {top: 20, right: 20, bottom: 20, left: 20};
+  
+  var width = 960 - margin.left - margin.right,
+      height = 800 - margin.top - margin.bottom,
+	  inner = 100,
+	  text_offset = 0.9;
+  var size   = Math.min(width, height);
+  
+  // insert an svg element
+  // the g element translates all coordinates such that the chart will be centered in the svg container (via the transform attribute in which we setup a translation)
+  var svg = d3.select("body").append("svg")
+  	  .attr("width", width)
+  	  .attr("height", height)
+  	  .attr("class", "canvas") // add class canvas so that in css file we can specify a background color for the svg
+    .append("g")
+  	  .attr("transform", "translate(" + (width) / 2 + "," + (height) / 2 + ")");
+  
+  var radius = Math.min(width - 3*margin.left, height - 5*margin.top) / 2;	
+  
+  // color scale
+  var color = d3.scale.category20();
+    
+  // define a pie layout: the pie angle encodes the count variable
+  var pie = d3.layout.pie()
+  	.value(function(d) { return d.count; })
+  	.sort(null);
+  
+  // define an arc generator. Note the radius is specified here, not the layout.
+  var arc = d3.svg.arc()
+  	.innerRadius(inner)
+  	.outerRadius( function(d){ return 2*d.data.height;});
+  
+  var path = svg.selectAll("path");
+	
+  // create data set input selector
+  var label = d3.select("form").selectAll("label")
+      .data(regionsByFruit)
+    .enter().append("label");
+
+  label.append("input")
+      .attr("type", "radio")
+      .attr("name", "dataSet")
+      .attr("value", function(d) { return d.key; })
+      .on("change", change)
+    .filter(function(d, i) {return !i; })
+      .each(change)
+      .property("checked", true);
+
+  label.append("span")
+      .text(function(d) { return d.key; });
+	  
+  var count = 0;	  
+  // chart visualization draw function, when input has changed
+  function change(region) {
+
+  count++;
+  
+  // remove all labels
+  d3.selectAll(".label").remove();
+  
+  d3.select(".aster-score").remove();
+  
+  // remove outline arc labels
+  d3.selectAll(".outlineArc").remove();
+  
+  var data0 = path.data(),
+      data1 = pie(region.values);
+	
+  path = path.data(data1, key);
+	
+  // outer ring
+  var outlineArc = d3.svg.arc()
+    .innerRadius(inner)
+    .outerRadius(radius);
+	  
+  // outer ring
+  var outerPath = svg.selectAll(".outlineArc")
+	.data(data1)
+	.enter().append("path")
+	.attr("fill", "none")
+	.attr("stroke", "gray")
+	.attr("stroke-width", "1px")
+	.attr("class", "outlineArc")
+	.attr("d", outlineArc) 
+    .style("opacity",0)
+	.transition()
+	.duration(750)
+	.style("opacity",1);
+	
+  // outer text label	
+  var outerGroup = svg.selectAll(".solidArc")
+    .data(data1)
+    .enter()
+    .append("g");
+
+	outerGroup
+	  .append("text")
+		.attr("transform", function(d) {
+			return "translate(" + centroid(60, size, d.startAngle, d.endAngle) + ")";
+		 })
+		.attr("text-anchor", "middle")
+		.style("font-size","12px")
+		.style("fill", "black")
+		.attr("class","label")	
+		.text(function(d) { return d.data.region;})
+		.style("opacity",0)
+		.transition()
+		.duration(750)
+		.style("opacity",1);
+	  
+    // center text
+	svg.append("svg:text")
+	  .attr("class", "aster-score")
+	  .attr("dy", ".35em")
+	  .attr("text-anchor", "middle")
+	  .style("font-size","50px")
+	  .text(function(){ return (count % 2 > 0) ? "120" : "100"});
+	
+	// paths for data for which there is no arc yet
+    path.enter()
+	.append("path")
+      .each(function(d, i) { this._current = findNeighborArc(i, data0, data1, key) || d; })
+      .attr("fill", function(d) { return color(d.data.region)})
+	  .attr("class","path");
+ 
+	// paths for arcs for which there is no data any more
+    path.exit()
+        .datum(function(d, i) { return findNeighborArc(i, data1, data0, key) || d; })
+      .transition()
+        .duration(750)
+        .attrTween("d", arcTween)
+        .remove();
+
+	// regular update i.e. arc for which there is also data
+    path.transition()
+        .duration(750)
+        .attrTween("d", arcTween);
+		
+	// qtip2 tooltip
+	$('.path').qtip({
+	  content: {text: function(event, api){return getToolTipText(this);}},
+	  position: {my: 'top center', target: 'mouse', adjust: {x: -(width / 2), y: -10} },
+	  style: {classes: "qtip-tipsy"}
+	});	
+	
+	// qtip2 tooltip
+	$('.aster-score').qtip({
+	  content: {text: "score"},
+	  position: {my: 'top center', target: 'mouse', adjust: {x: -(width / 2), y: -10} },
+	  style: {classes: "qtip-tipsy"}
+	});	
+  }
+</script>
