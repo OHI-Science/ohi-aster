@@ -95,7 +95,11 @@ HTMLWidgets.widget({
       .attr("text-anchor", "middle")
       .style("font-size",x.font_size) // change the font_size based on htmlwidget options
       .style("fill",x.font_color) // change the font_color based on htmlwidget options
-      .text(function(d) { return d.data.label });
+      .text(function(d) {  
+        if (x.plot_outer_label){ 
+          return d.data.label; 
+        } else { 
+          return null; } });
 
       var outerPath = svg.selectAll(".outlineArc")
         .data(pie(data))

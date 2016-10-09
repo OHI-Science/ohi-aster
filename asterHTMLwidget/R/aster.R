@@ -9,22 +9,25 @@
 #' @param tooltipStyle tooltip style, see http://qtip2.com/options#style for details, defaults to 'qtip-dark qtip-shadow qtip-tipsy',
 #' @param inner values smaller than 1 create donut charts (instead of pies), defaults to 0.3
 #' @param stroke arc edge color, default grey
-#' @param hover_color, slice hover color, default blue
 #' @param font_size label text font size, default 12px
 #' @param font_size_center font size numeric value in chart center, default 50px
 #' @param margin_top chart top margin, default 40
 #' @param margin_right chart right margin, default 80
 #' @param margin_bottom chart bottom margin, default 40
 #' @param margin_left chart left margin, default 80
+#' @param score score to be placed at center of aster plot
+#' @param plot_outer_label whether to plot outer label, default FALSE
+#' @param hover_color slice hover color, default blue
 #'
 #' @export
 aster <- function(data = data.frame(id     = c("FIS","MAR","AO","NP","CS"),
                                     order  = c(1.1,1.3,2.0,3.0,4.0),
-                                    score  = c(59,24,98,60,74),
+                                    score  = c(NA,24,98,60,74),
                                     weight = c(0.5,0.5,1,1,1),
                                     color  = c("#9E0041","#C32F4B","#E1514B","#F47245","#FB9F59"),
                                     label  = c("Fisheries","Mariculture","Artisanal Fishing Opportunities","Natural Products","Carbon Storage")),
                   score = 55,
+                  plot_outer_label = F,
                   width = NULL, height = NULL, background_color = "transparent", text_offset = 1, font_color = "black",
                   tooltipStyle = 'qtip-dark qtip-shadow qtip-tipsy',
                   inner = 0.3, stroke = "grey", hover_color = "blue", font_size = "12px", font_size_center = "50px",
@@ -34,6 +37,7 @@ aster <- function(data = data.frame(id     = c("FIS","MAR","AO","NP","CS"),
   x = list(
     data             = jsonlite::toJSON(data),
     score            = score,
+    plot_outer_label = plot_outer_label,
     inner            = inner,
     stroke           = stroke,
     hover_color      = hover_color,
