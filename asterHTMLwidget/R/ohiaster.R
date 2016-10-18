@@ -1,4 +1,4 @@
-#' aster HTMLwidget
+#' ohiaster HTMLwidget
 #'
 #' @param data data frame holding chart data, expects columns id, order, score, weight, color and label
 #' @param width chart width
@@ -20,7 +20,7 @@
 #' @param hover_color slice hover color, default blue
 #'
 #' @export
-aster <- function(data = data.frame(id     = c("FIS","MAR","AO","NP","CS"),
+ohiaster <- function(data = data.frame(id     = c("FIS","MAR","AO","NP","CS"),
                                     order  = c(1.1,1.3,2.0,3.0,4.0),
                                     score  = c(NA,24,98,60,74),
                                     weight = c(0.5,0.5,1,1,1),
@@ -55,11 +55,11 @@ aster <- function(data = data.frame(id     = c("FIS","MAR","AO","NP","CS"),
 
   # create widget
   htmlwidgets::createWidget(
-    name    = 'aster',
+    name    = 'ohiaster',
     x       = x,
     width   = width,
     height  = height,
-    package = 'aster'
+    package = 'ohiaster'
   )
 }
 
@@ -67,7 +67,7 @@ aster <- function(data = data.frame(id     = c("FIS","MAR","AO","NP","CS"),
 #'
 #' @export
 asterOutput <- function(outputId, width = '500px', height = '500px'){
-  shinyWidgetOutput(outputId, 'aster', width, height, package = 'aster')
+  shinyWidgetOutput(outputId, 'ohiaster', width, height, package = 'ohiaster')
 }
 
 #' Widget render function for use in Shiny

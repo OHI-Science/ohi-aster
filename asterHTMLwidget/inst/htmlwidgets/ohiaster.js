@@ -1,6 +1,6 @@
 HTMLWidgets.widget({
 
-  name: 'aster',
+  name: 'ohiaster',
 
   type: 'output',
 
