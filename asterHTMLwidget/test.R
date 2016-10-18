@@ -1,7 +1,17 @@
 library(shiny)
 library(htmlwidgets)
 library(jsonlite)
-library(aster)
+#library(aster)
+#library(devtools); load_all()
+library(ohiaster)
+library(readr)
+
+# angola
+angola = read_csv('../data/angola.csv')
+ohiaster(angola, 59.1,
+  background_color = "transparent",
+  font_color = "black", stroke = "blue", font_size_center = "12px", font_size = "8px",
+  margin_top=5, margin_right=5, margin_bottom=5, margin_left=5)
 
 # set wd
 setwd("C:/Users/hsontrop/Desktop/aster/")
